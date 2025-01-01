@@ -1,0 +1,5 @@
+# Ignore application.properties
+application.properties
+# If it's in a specific folder
+src/com/properties/application.properties
+/bin/
