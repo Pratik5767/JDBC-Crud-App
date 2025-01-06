@@ -7,15 +7,12 @@ import com.company.persistence.IStudentDao;
 // Service Layer
 public class StudentServiceImpl implements IStudentService {
 
-	private IStudentDao stdDao; 
-	
+	private IStudentDao stdDao;
+
 	@Override
 	public String addStudent(String sname, Integer sage, String saddress) {
 		stdDao = StudentDaoFactory.getStudentDao();
-		if (stdDao != null) 
-			return stdDao.insertStudent(sname, sage, saddress);
-		else
-			return "failure";
+		return stdDao.insertStudent(sname, sage, saddress);
 	}
 
 	@Override
@@ -25,9 +22,9 @@ public class StudentServiceImpl implements IStudentService {
 	}
 
 	@Override
-	public String updateStudent(Integer sid, String sname, Integer sage, String saddress) {
+	public String updateStudent(Student student) {
 		stdDao = StudentDaoFactory.getStudentDao();
-		return stdDao.updateStudent(sid, sname, sage, saddress);
+		return stdDao.updateStudent(student);
 	}
 
 	@Override

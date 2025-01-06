@@ -46,7 +46,7 @@ public class StudentDaoImpl implements IStudentDao {
 	public Student searchStudent(Integer sid) {
 		String sqlSelectQuery = "SELECT `id`, `name`, `age`, `address` FROM students WHERE id = ?";
 		Student std = null;
-		
+
 		try {
 			connection = JdbcUtil.getJdbcConnection();
 
@@ -62,14 +62,13 @@ public class StudentDaoImpl implements IStudentDao {
 			if (resultSet != null) {
 				if (resultSet.next()) {
 					std = new Student();
-
 					// copy resultSet data to student object
 					std.setSid(resultSet.getInt(1));
 					std.setSname(resultSet.getString(2));
-					std.setSid(resultSet.getInt(3));
-					std.setSaddress(resultSet.getString(3));
+					std.setSage(resultSet.getInt(3));
+					std.setSaddress(resultSet.getString(4));
 					return std;
-				} 
+				}
 			}
 		} catch (SQLException | IOException e) {
 			e.printStackTrace();
@@ -78,8 +77,31 @@ public class StudentDaoImpl implements IStudentDao {
 	}
 
 	@Override
-	public String updateStudent(Integer sid, String sname, Integer sage, String saddress) {
-		return null;
+	public String updateStudent(Student student) {
+		String sqlUpdateQuery = "UPDATE students SET `name` = ?,`age` = ?,`address` = ? WHERE id = ?";
+		try {
+			connection = JdbcUtil.getJdbcConnection();
+
+			if (connection != null) {
+				prepareStatement = connection.prepareStatement(sqlUpdateQuery);
+			}
+
+			if (prepareStatement != null) {
+				prepareStatement.setString(1, student.getSname());
+				prepareStatement.setInt(2, student.getSage());
+				prepareStatement.setString(3, student.getSaddress());
+				prepareStatement.setInt(4, student.getSid());
+			}
+
+			int rowCount = prepareStatement.executeUpdate();
+
+			if (rowCount == 1) {
+				return "success";
+			}
+		} catch (SQLException | IOException e) {
+			e.printStackTrace();
+		}
+		return "failure";
 	}
 
 	@Override
@@ -87,15 +109,15 @@ public class StudentDaoImpl implements IStudentDao {
 		String sqlDeleteQuery = "DELETE FROM students WHERE id = ?";
 		try {
 			connection = JdbcUtil.getJdbcConnection();
-			
+
 			if (connection != null) {
 				prepareStatement = connection.prepareStatement(sqlDeleteQuery);
 			}
-			
+
 			if (prepareStatement != null) {
 				prepareStatement.setInt(1, sid);
 			}
-			
+
 			int rowCount = prepareStatement.executeUpdate();
 			if (rowCount == 1) {
 				return "success";
